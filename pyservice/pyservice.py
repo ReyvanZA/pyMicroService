@@ -1,3 +1,9 @@
+try:
+    from cheroot.wsgi import Server as WSGIServer, PathInfoDispatcher
+except ImportError:
+    from cherrypy.wsgiserver import CherryPyWSGIServer as WSGIServer, WSGIPathInfoDispatcher as PathInfoDispatcher
+
+
 from flask import Flask, jsonify, make_response
 from flask_sqlalchemy import SQLAlchemy
 from flask_httpauth import HTTPBasicAuth
@@ -45,4 +51,16 @@ def customer():
     return  result + ']'
 
 if __name__ == '__main__':
-    app.run(host='10.27.1.178',debug=True)
+    d = PathInfoDispatcher({'/': app})
+    server = WSGIServer(('0.0.0.0', 80), d)
+
+    try:
+      server.start()
+    except KeyboardInterrupt:
+      server.stop()
+
+
+
+
+
+        
