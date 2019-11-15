@@ -44,4 +44,5 @@ def customer():
 
     return  result + ']'
 
-app.run(host='10.27.1.178',debug=True)
+if __name__ == '__main__':
+    app.run(host='10.27.1.178',debug=True)
