@@ -1,9 +1,11 @@
 from sqlalchemy import create_engine, ForeignKey
-from sqlalchemy import Column, Date, Integer, String
+from sqlalchemy import Column, Date, Integer, String, DateTime
 from sqlalchemy import MetaData
 from sqlalchemy_utils import database_exists, create_database
 from sqlalchemy.orm.attributes import QueryableAttribute
 
+import datetime
+import random
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
@@ -13,6 +15,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///example.sqlite'
 db = SQLAlchemy(app)
 
+# JSON base model
 class BaseModel(db.Model):
     __abstract__ = True
 
@@ -124,6 +127,8 @@ class BaseModel(db.Model):
         return ret_data
 
 
+#Data tables
+
 class Customer(BaseModel):
     __tablename__ = 'Customer'
 
@@ -157,6 +162,44 @@ class Address(BaseModel):
     add_cstid = Column(Integer, ForeignKey('Customer.cst_id'))
 
     
+#Service Tables
+
+class User(db.Model):
+    __tablename__ = 'User'
+
+    usr_id = Column(Integer, primary_key=True)
+    usr_login = Column(String(50))
+    usr_name = Column(String(50))
+    usr_email = Column(String(100))
+    usr_password = Column(String(200))
+    usr_status = Column(Integer)
+    usr_created = Column(DateTime, nullable=False, default=datetime.datetime.utcnow)
+
+class Group(db.Model):
+    __tablename__ = 'Group'
+
+    grp_id = Column(Integer, primary_key=True)
+    grp_name = Column(String(20))
+    grp_description = Column(String)
+    grp_status = Column(Integer)
+
+
+class UserGroup(db.Model):
+    __tablename__ = 'UserGroup'
+
+    ugr_id = Column(Integer, primary_key=True)
+    ugr_usrid = Column(Integer, ForeignKey('User.usr_id'))
+    ugr_grpid = Column(Integer, ForeignKey('Group.grp_id'))
+
+
+def createdb():
+    """Create some random data for testing"""
+    db.session.add(Customer(f'Test{random.randrange(100,999)}','Test',f'er{random.randrange(100,999)}'))
+    db.session.add(Customer(f'Test{random.randrange(100,999)}','Test',f'er{random.randrange(100,999)}'))
+
+
+    db.session.commit()
+
 
 if __name__ == "__main__":
     engine = create_engine('sqlite:///example.sqlite', echo=True)
@@ -168,6 +211,8 @@ if __name__ == "__main__":
         print(f'Database Already exists.')
 
     db.metadata.create_all(engine)
+
+    createdb()
     
     
 

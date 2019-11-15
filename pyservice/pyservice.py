@@ -3,12 +3,10 @@ try:
 except ImportError:
     from cherrypy.wsgiserver import CherryPyWSGIServer as WSGIServer, WSGIPathInfoDispatcher as PathInfoDispatcher
 
-
 from flask import Flask, jsonify, make_response
 from flask_sqlalchemy import SQLAlchemy
 from flask_httpauth import HTTPBasicAuth
 
-import random
 import json
 import db as model
 
@@ -16,12 +14,6 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///example.sqlite'
 db = SQLAlchemy(app)
 auth = HTTPBasicAuth()
-
-#db.session.add(model.Customer(f'Test{random.randrange(100,999)}','Test',f'er{random.randrange(100,999)}'))
-
-#db.session.add(model.Customer(f'Test{random.randrange(100,999)}','Test',f'er{random.randrange(100,999)}'))
-
-#db.session.commit()
 
 @auth.get_password
 def get_password(username):
@@ -41,6 +33,7 @@ def index():
 @app.route('/api/customer',methods=['GET'])
 @auth.login_required
 def customer():
+    """Returns a json list of all customers"""
     customers = db.session.query(model.Customer).all()
     result = '['
     for customer in customers:
@@ -51,6 +44,7 @@ def customer():
     return  result + ']'
 
 if __name__ == '__main__':
+    """Run the cherry server"""
     d = PathInfoDispatcher({'/': app})
     server = WSGIServer(('0.0.0.0', 80), d)
 
