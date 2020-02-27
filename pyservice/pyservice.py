@@ -1,5 +1,7 @@
+import config
 try:
     from cheroot.wsgi import Server as WSGIServer, PathInfoDispatcher
+    from cheroot.ssl.builtin import BuiltinSSLAdapter
 except ImportError:
     from cherrypy.wsgiserver import CherryPyWSGIServer as WSGIServer, WSGIPathInfoDispatcher as PathInfoDispatcher
 
@@ -30,12 +32,18 @@ def unauthorized():
 def index():
     return ""
 
+#Take a look at https://stackoverflow.com/questions/48073635/flask-httpauth-user-access-levels 
+
 @app.route('/api/customer',methods=['GET'])
 @auth.login_required
 def customer():
     """Returns a json list of all customers"""
-    customers = db.session.query(model.Customer).all()
+    customers = model.Customer.query.all()
     result = '['
+
+    if len(customers) == 0 :
+        return '[]'
+
     for customer in customers:
         result += json.dumps(customer.to_dict()) + ','
 
@@ -43,11 +51,21 @@ def customer():
 
     return  result + ']'
 
+
+#Take a look on running the cherry server:
+#   https://stackoverflow.com/questions/55366395/how-to-run-a-flask-app-on-cherrypy-wsgi-server-cheroot-using-https 
+#   https://www.digitalocean.com/community/tutorials/how-to-deploy-python-wsgi-applications-using-a-cherrypy-web-server-behind-nginx 
+#         
+
 if __name__ == '__main__':
     """Run the cherry server"""
     d = PathInfoDispatcher({'/': app})
-    server = WSGIServer(('0.0.0.0', 80), d)
+    server = WSGIServer(('0.0.0.0', 8000), d)
 
+    path = config.settings['sslPath']
+
+    server.ssl_adapter = BuiltinSSLAdapter(certificate=f'{path}cert.pem', private_key=f'{path}privkey.pem')
+    
     try:
       server.start()
     except KeyboardInterrupt:

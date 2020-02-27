@@ -127,8 +127,9 @@ class BaseModel(db.Model):
         return ret_data
 
 
-#Data tables
-
+#Data ORM tables
+#Take a look
+#   https://auth0.com/blog/sqlalchemy-orm-tutorial-for-python-developers/
 class Customer(BaseModel):
     __tablename__ = 'Customer'
 
@@ -196,8 +197,7 @@ def createdb():
     """Create some random data for testing"""
     db.session.add(Customer(f'Test{random.randrange(100,999)}','Test',f'er{random.randrange(100,999)}'))
     db.session.add(Customer(f'Test{random.randrange(100,999)}','Test',f'er{random.randrange(100,999)}'))
-
-
+    
     db.session.commit()
 
 

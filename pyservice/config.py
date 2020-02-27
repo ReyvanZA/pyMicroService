@@ -1,0 +1,1 @@
+settings = {'sslPath':'/pyMicroService/pyservice/ssl/'}
