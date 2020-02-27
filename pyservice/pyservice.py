@@ -1,4 +1,8 @@
-import config
+try:
+    from local import settings
+except ImportError:
+    from config import settings
+
 try:
     from cheroot.wsgi import Server as WSGIServer, PathInfoDispatcher
     from cheroot.ssl.builtin import BuiltinSSLAdapter
@@ -62,7 +66,7 @@ if __name__ == '__main__':
     d = PathInfoDispatcher({'/': app})
     server = WSGIServer(('0.0.0.0', 8000), d)
 
-    path = config.settings['sslPath']
+    path = settings['sslPath']
 
     server.ssl_adapter = BuiltinSSLAdapter(certificate=f'{path}cert.pem', private_key=f'{path}privkey.pem')
     

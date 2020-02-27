@@ -3,7 +3,7 @@ A simple micro service for exposing data via a secure restful interface
 
 This is a learning project for me, and I have no idea what direction it is going to take. All I want to do for now is to create a secure way of retrieving data from a data source, and expose it via a RESTful service to the world. 
 
-It's going to get dirty! <- I don't have any ignores
+It is dirty!
 
 I'm not that PEPpy (https://www.python.org/dev/peps), but I'm enthusiastic 
 
@@ -34,9 +34,12 @@ I'm not that PEPpy (https://www.python.org/dev/peps), but I'm enthusiastic
 # Features
 * JSON output of sqlalchemy results
 * Basic Authentication
+* SSL (Self signed)  
+  --https://docs.cherrypy.org/en/latest/deploy.html 
+* Dev (local.py) and Production (config.py) settings
+
 
 # Todo
-* SSL
 * Dynamic Users/groups stored in the database
 
 # Kudo's
@@ -51,11 +54,12 @@ Then going advanced deployement (Structuring a Flak-RESTPlus web service for pro
 https://www.freecodecamp.org/news/structuring-a-flask-restplus-web-service-for-production-builds-c2ec676de563/ 
 
 # Requires (+)
-FLask as the micro web framewrok https://www.palletsprojects.com/p/flask/ 
-SQLAlchemy ORM to expose the database https://www.sqlalchemy.org/ 
-CherryPy WSGI server to server the service :) https://cherrypy.org/ 
+* FLask as the micro web framewrok https://www.palletsprojects.com/p/flask/ 
+* SQLAlchemy ORM to expose the database https://www.sqlalchemy.org/ 
+* CherryPy WSGI server to server the service :) https://cherrypy.org/ 
 
 
-+ No an extensive list. Keep an eye on the requirements file
++ Not an extensive list. Keep an eye on the requirements file
+
 
 
